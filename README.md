@@ -87,8 +87,4 @@ python main1.py
 # Pour obtenir la réponse de la partie 2
 python main2.py
 ```
-
------
-
 *Bon code et Joyeuses Fêtes \!* 🎄
-```
