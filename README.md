@@ -1,96 +1,94 @@
-Bien sûr \! Voici le contenu du fichier `README.md` (version détente) directement ici, pour que tu puisses le copier-coller facilement sans passer par l'éditeur.
+# 🎄 Advent of Code 2025 - Jour 1 : L'Entrée Secrète 🎅
 
-````markdown
-# 🎄 Advent of Code 2025 - Day 01 🎅
-
-## 🔐 The Secret Entrance (Cracking the Safe)
+Bienvenue dans mon dépôt pour le **Jour 1** de l'Advent of Code 2025 ! Cette année, les elfes ont (encore) des problèmes de gestion de projet, et nous devons les aider à décorer le Pôle Nord. Mais d'abord... il faut ouvrir un coffre-fort.
 
 ![Language](https://img.shields.io/badge/Language-Python_3-blue?style=for-the-badge&logo=python)
 ![Stars](https://img.shields.io/badge/Stars-⭐_2%2F2-yellow?style=for-the-badge)
-![Vibe](https://img.shields.io/badge/Vibe-Chill-pink?style=for-the-badge)
 
-### 📖 What's the deal with AoC?
+## 📖 Le Défi : Ouvrir le Coffre
 
-So, [Advent of Code](https://adventofcode.com/) is basically this huge coding calendar that happens every December. It's made by this dude [Eric Wastl](http://was.tl/). Basically, you get puzzles, you solve 'em, you feel smart. Doesn't matter what language you code in, just get those stars! ⭐
+Nous sommes devant une entrée secrète, mais le mot de passe a changé. Pour l'obtenir, nous devons manipuler un cadran numéroté de **0 à 99**.
 
----
+* **Le mécanisme :** Un cadran circulaire (comme une horloge, mais de 0 à 99).
+* **Les instructions :** Une liste de rotations, par exemple `R47` (Droite 47 crans) ou `L37` (Gauche 37 crans).
+* **Départ :** Le cadran commence toujours sur la position **50**.
 
-### 🕵️‍♂️ The Challenge: Day 1
+### ⭐ Partie 1 : Le Leurre
+La première consigne nous demandait de suivre les instructions et de compter **combien de fois le cadran s'arrête exactement sur 0** à la fin d'une rotation.
 
-Okay, so the Elves are having a meltdown (classic). They wanna decorate the North Pole but the **Secret Entrance** is locked tight! 🛑
-We gotta break into this safe that has a dial from `0` to `99`.
+### 🌟 Partie 2 : Le Vrai Mot de Passe
+La sécurité a été renforcée (ou plutôt, mal comprise au début). Pour le vrai mot de passe, il faut compter **chaque "clic" sur le 0**, même si le cadran ne fait que passer dessus pendant qu'il tourne.
 
-* **The Input:** Just a bunch of instructions like `R47`, `L37`.
-* **The Mechanism:** The dial is a circle (wraps around 0-99).
-    * `L` (Left) = Subtract numbers.
-    * `R` (Right) = Add numbers.
-
-#### ⭐ Part 1: The Decoy
-First up, we just needed to count **how many times the dial lands EXACTLY on 0** when it stops spinning. Easy peasy.
-
-#### 🌟 Part 2: The Real Password
-Then it got real. The security is tighter than we thought! Now we gotta count **every single time the dial touches 0**, even while it's spinning past it. So if it goes from 90 to 10 (crossing 0), that counts!
+Cela inclut :
+1.  Les fois où il s'arrête sur 0.
+2.  Les fois où il traverse le 0 en passant de 99 à 0 (ou inversement).
 
 ---
 
-### 📂 Repo Stuff
-```text
+## 📂 Structure du Projet
+
 advent-of-code-2025-day-01/
-├── input.txt        # The secret instructions (shhh)
-├── main1.py         # Code for the easy part
-├── main2.py         # Code for the tricky part
-└── README.md        # You are here lol
-````
+├── input.txt        # Les instructions données par l'Advent of Code
+├── main1.py         # Solution pour la Partie 1 (Arrêts sur 0)
+├── main2.py         # Solution pour la Partie 2 (Passages par 0)
+└── README.md        # Ce fichier
 
 -----
 
-### 🐍 How I Solved It
+## 🐍 Ma Solution et Ma Logique
 
-I grabbed **Python** cause it's chill. The main trick here is **Modulo Arithmetic**. Sounds fancy, but it's just clock math.
+J'ai choisi **Python** pour résoudre ce problème. La clé de ce défi réside dans l'arithmétique modulaire (le fameux `%`), car le cadran est un cercle qui boucle sur lui-même.
 
-#### 💡 The Logic (Spinning in Circles)
+### Logique Globale (Modulo)
 
-Since the dial goes from 99 back to 0, I used the modulo operator `%` so the numbers don't go crazy:
+Puisque le cadran va de 0 à 99, dès qu'on dépasse 99 ou qu'on descend sous 0, on doit revenir dans l'intervalle. L'opérateur `% 100` est parfait pour ça :
+
+  * `position = (position + valeur) % 100` (pour la droite)
+  * `position = (position - valeur) % 100` (pour la gauche)
+
+### 🧠 Logique Partie 2 (Calcul de distance)
+
+Pour la deuxième étoile, simuler chaque clic un par un aurait pu fonctionner, mais j'ai opté pour une approche plus mathématique dans `main2.py`.
+
+Au lieu de faire une boucle pour chaque mouvement, je calcule la **distance restante jusqu'à zéro** :
+
+1.  **Vers la Gauche (L) :** La distance vers 0 est simplement la valeur actuelle de la position.
+2.  **Vers la Droite (R) :** La distance vers 0 est `100 - position`.
+
+Si la valeur de rotation est supérieure ou égale à cette distance, cela signifie qu'on a croisé le zéro au moins une fois. On ajoute alors 1 au code, puis on regarde combien de tours complets (100 crans) on a fait en plus avec le reste de la rotation.
+
+Extrait de `main2.py` :
 
 ```python
-# Going Right (Adding stuff)
-position = (position + valeur) % 100
-
-# Going Left (Subtracting stuff)
-position = (position - valeur) % 100
-```
-
-#### 🔍 Part 2 Logic (Did we cross the line?)
-
-For the second star, just checking where we stopped wasn't gonna cut it. I had to calculate the distance to zero to see if we "lapped" it.
-
-```python
-# From main2.py
 if sens == "R":
     distance_zero = 100 - position
+    # Est-ce qu'on tourne assez pour atteindre ou dépasser 0 ?
     if valeur >= distance_zero:
-        code += 1 # Ding! Crossed zero
+        code += 1             # On a touché 0 une première fois
         reste = valeur - distance_zero
-        code += reste // 100 # Count any extra full spins
+        code += reste // 100  # On ajoute les tours complets supplémentaires
+    
+    # Mise à jour de la position finale
+    position = (position + valeur) % 100
 ```
 
 -----
 
-### 🚀 Wanna Run It?
+## 🚀 Comment lancer le code
 
-Just pop open your terminal and type this:
+Assurez-vous d'avoir Python installé, puis lancez simplement les scripts dans votre terminal :
 
 ```bash
-# Part 1
+# Pour obtenir la réponse de la partie 1
 python main1.py
 
-# Part 2
+# Pour obtenir la réponse de la partie 2
 python main2.py
 ```
 
 -----
 
-*🎄 Happy Holidays & Happy Coding fam\!*
+*Bon code et Joyeuses Fêtes \!* 🎄
 
 ```
 ```
