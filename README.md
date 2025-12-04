@@ -1,4 +1,3 @@
-````markdown
 # 🎄 Advent of Code 2025 - Jour 1 : L'Entrée Secrète 🎅
 
 Bienvenue dans mon dépôt pour le **Jour 1** de l'Advent of Code 2025 ! Cette année, les elfes ont (encore) des problèmes de gestion de projet, et nous devons les aider à décorer le Pôle Nord. Mais d'abord... il faut ouvrir un coffre-fort.
@@ -92,6 +91,4 @@ python main2.py
 -----
 
 *Bon code et Joyeuses Fêtes \!* 🎄
-
-```
 ```
